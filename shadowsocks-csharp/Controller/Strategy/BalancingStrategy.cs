@@ -35,7 +35,7 @@ namespace Shadowsocks.Controller.Strategy
 
         public Server GetAServer(IStrategyCallerType type, IPEndPoint localIPEndPoint, EndPoint destEndPoint)
         {
-            var configs = _controller.GetCurrentConfiguration().configs;
+            var configs = _controller.GetCurrentConfiguration().servers;
             int index;
             if (type == IStrategyCallerType.TCP)
             {

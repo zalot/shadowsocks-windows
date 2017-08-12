@@ -165,8 +165,8 @@ namespace Shadowsocks.Controller
         {
             var records = new Dictionary<string, StatisticsRecord>();
             UpdateRecordsState state = new UpdateRecordsState();
-            state.counter = _controller.GetCurrentConfiguration().configs.Count;
-            foreach (var server in _controller.GetCurrentConfiguration().configs)
+            state.counter = _controller.GetCurrentConfiguration().servers.Count;
+            foreach (var server in _controller.GetCurrentConfiguration().servers)
             {
                 var id = server.Identifier();
                 List<int> inboundSpeedRecords = null;

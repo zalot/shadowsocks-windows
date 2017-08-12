@@ -35,7 +35,7 @@ namespace Shadowsocks.View
 
         private void LoadConfiguration()
         {
-            var configs = _controller.GetCurrentConfiguration().configs;
+            var configs = _controller.GetCurrentConfiguration().servers;
             _servers = configs.Select(server => server.Identifier()).ToList();
             _configuration = _controller.StatisticsConfiguration
                              ?? new StatisticsStrategyConfiguration();

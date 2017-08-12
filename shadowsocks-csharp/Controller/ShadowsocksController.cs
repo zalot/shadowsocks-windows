@@ -27,6 +27,7 @@ namespace Shadowsocks.Controller
         private Thread _ramThread;
         private Thread _trafficThread;
 
+        protected LoginController login;
         private Listener _listener;
         private PACServer _pacServer;
         private Configuration _config;
@@ -76,11 +77,17 @@ namespace Shadowsocks.Controller
 
         public ShadowsocksController()
         {
+            
+        }
+
+        public bool Load()
+        {
             _config = Configuration.Load();
             StatisticsConfiguration = StatisticsStrategyConfiguration.Load();
             _strategyManager = new StrategyManager(this);
-            StartReleasingMemory();
             StartTrafficStatistics(61);
+            StartReleasingMemory();
+            return true;
         }
 
         public void Start()
@@ -146,7 +153,7 @@ namespace Shadowsocks.Controller
 
         public void SaveServers(List<Server> servers, int localPort)
         {
-            _config.configs = servers;
+            _config.servers = servers;
             _config.localPort = localPort;
             Configuration.Save(_config);
         }
@@ -166,9 +173,9 @@ namespace Shadowsocks.Controller
                 if (servers == null || servers.Count == 0) return false;
                 foreach (var server in servers)
                 {
-                    _config.configs.Add(server);
+                    _config.servers.Add(server);
                 }
-                _config.index = _config.configs.Count - 1;
+                _config.index = _config.servers.Count - 1;
                 SaveConfig(_config);
                 return true;
             }
@@ -425,7 +432,7 @@ namespace Shadowsocks.Controller
             // some logic in configuration updated the config when saving, we need to read it again
             _config = Configuration.Load();
             StatisticsConfiguration = StatisticsStrategyConfiguration.Load();
-
+            
             if (privoxyRunner == null)
             {
                 privoxyRunner = new PrivoxyRunner();
@@ -445,6 +452,7 @@ namespace Shadowsocks.Controller
             }
 
             availabilityStatistics.UpdateConfiguration(this);
+            
 
             if (_listener != null)
             {

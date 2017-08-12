@@ -260,7 +260,7 @@ namespace Shadowsocks.View
              * XXX: The labelName, TextBoxName and callbackName
              *      must follow this rule to make use of reflection
              *
-             *      <BaseName><Control-Type-Name>
+             *      <BaseName><Control-Type-dgColName>
              */
             if (tb == null)
                 throw new ArgumentNullException(nameof(tb));

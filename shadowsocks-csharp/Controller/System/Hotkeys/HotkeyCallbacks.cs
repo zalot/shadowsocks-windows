@@ -107,7 +107,7 @@ namespace Shadowsocks.Controller.Hotkeys
         {
             var currConfig = _controller.GetCurrentConfiguration();
             currIndex = currConfig.index;
-            serverCount = currConfig.configs.Count;
+            serverCount = currConfig.servers.Count;
         }
 
         #endregion

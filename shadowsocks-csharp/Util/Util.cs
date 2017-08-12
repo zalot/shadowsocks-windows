@@ -6,6 +6,12 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Shadowsocks.Controller;
+using Shadowsocks.Model;
+using System.Net;
+using Newtonsoft.Json;
+using System.Text;
+using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace Shadowsocks.Util
 {
@@ -255,5 +261,133 @@ namespace Shadowsocks.Util
             }
             return false;
         }
+
+
+        static NetServers netServers = null;
+        static bool isLoadNetServer = false;
+
+        public static NetServers getNetServers()
+        {
+            if (netServers != null) return netServers;
+            if (isLoadNetServer) return netServers;
+
+            try
+            {
+                isLoadNetServer = true;
+                WebRequest request = WebRequest.Create("http://www.akanpian.com/vpn.json");  //实例化WebRequest对象
+                WebResponse response = request.GetResponse();//创建WebResponse对象
+                Stream datastream = response.GetResponseStream();//创建流对象
+                StreamReader reader = new StreamReader(datastream, Encoding.UTF8);
+                string responseFromServer = reader.ReadToEnd();//读取数据
+                var cfg = JsonConvert.DeserializeObject<NetServers>(responseFromServer);
+                reader.Close();
+                datastream.Close();
+                response.Close();
+                netServers = cfg;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            return netServers;
+        }
+
+        public static List<Server> getNetServersByType(string type)
+        {
+            List<Server> ss = new List<Server>();
+            foreach(Server s in getNetServers().servers)
+            {
+                if (String.Equals(s.name,type,StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ss.Add(s);
+                }
+            }
+            return ss;
+        }
+
+        //public static List<Server> getNetServersById(string id)
+        //{
+        //    List<Server> ss = new List<Server>();
+        //    foreach (Server s in getNetServers().servers)
+        //    {
+        //        if (String.Equals(s.name, type, StringComparison.CurrentCultureIgnoreCase))
+        //        {
+        //            ss.Add(s);
+        //        }
+        //    }
+        //    return ss;
+        //}
+
+        public static StatisticsStrategyConfiguration loadConfig(string file)
+        {
+            try
+            {
+                string cfc = File.ReadAllText(file);
+                var cfg = JsonConvert.DeserializeObject<StatisticsStrategyConfiguration>(cfc);
+                return cfg;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static string getAppPath()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "/YouXueVPN" ;
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+
+        static string encryptKey = "Zlot1481";    //定义密钥
+        static string Encrypt(string str)
+        {
+            DESCryptoServiceProvider descsp = new DESCryptoServiceProvider();   //实例化加/解密类对象   
+
+            byte[] key = Encoding.Unicode.GetBytes(encryptKey); //定义字节数组，用来存储密钥    
+
+            byte[] data = Encoding.Unicode.GetBytes(str);//定义字节数组，用来存储要加密的字符串  
+
+            MemoryStream MStream = new MemoryStream(); //实例化内存流对象      
+
+            //使用内存流实例化加密流对象   
+            CryptoStream CStream = new CryptoStream(MStream, descsp.CreateEncryptor(key, key), CryptoStreamMode.Write);
+
+            CStream.Write(data, 0, data.Length);  //向加密流中写入数据      
+
+            CStream.FlushFinalBlock();              //释放加密流      
+
+            return Convert.ToBase64String(MStream.ToArray());//返回加密后的字符串  
+        }
+
+        /// <summary>  
+        /// 解密字符串   
+        /// </summary>  
+        /// <param name="str">要解密的字符串</param>  
+        /// <returns>解密后的字符串</returns>  
+        static string Decrypt(string str)
+        {
+            DESCryptoServiceProvider descsp = new DESCryptoServiceProvider();   //实例化加/解密类对象    
+
+            byte[] key = Encoding.Unicode.GetBytes(encryptKey); //定义字节数组，用来存储密钥    
+
+            byte[] data = Convert.FromBase64String(str);//定义字节数组，用来存储要解密的字符串  
+
+            MemoryStream MStream = new MemoryStream(); //实例化内存流对象      
+
+            //使用内存流实例化解密流对象       
+            CryptoStream CStream = new CryptoStream(MStream, descsp.CreateDecryptor(key, key), CryptoStreamMode.Write);
+
+            CStream.Write(data, 0, data.Length);      //向解密流中写入数据     
+
+            CStream.FlushFinalBlock();               //释放解密流      
+
+            return Encoding.Unicode.GetString(MStream.ToArray());       //返回解密后的字符串  
+        }
+
     }
 }

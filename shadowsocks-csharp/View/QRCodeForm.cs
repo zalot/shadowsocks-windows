@@ -65,7 +65,7 @@ namespace Shadowsocks.View
         private void QRCodeForm_Load(object sender, EventArgs e)
         {
             var servers = Configuration.Load();
-            var serverDatas = servers.configs.Select(
+            var serverDatas = servers.servers.Select(
                 server =>
                     new KeyValuePair<string, string>(ShadowsocksController.GetQRCode(server), server.FriendlyName())
                 ).ToList();

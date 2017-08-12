@@ -1,6 +1,6 @@
 # translation for Simplified Chinese
 
-Shadowsocks=Shadowsocks
+Shadowsocks=游学VPN
 
 # Menu items
 
@@ -104,7 +104,7 @@ Reg All=注册全部热键
 
 # Messages
 
-Shadowsocks Error: {0}=Shadowsocks 错误: {0}
+Shadowsocks Error: {0}=内部错误 错误: {0}
 Port already in use=端口已被占用
 Invalid server address=非法服务器地址
 Illegal port number format=非法端口格式
@@ -117,8 +117,8 @@ Port can't be 8123=端口不能为 8123
 Shadowsocks {0} Update Found=Shadowsocks {0} 更新
 No update is available=没有可用的更新
 Click here to update=点击这里升级
-Shadowsocks is here=Shadowsocks 在这里
-You can turn on/off Shadowsocks in the context menu=可以在右键菜单中开关 Shadowsocks
+Shadowsocks is here=游学VPN 在这里
+You can turn on/off Shadowsocks in the context menu=可以在右键菜单中开关 VPN
 System Proxy Enabled=系统代理已启用
 System Proxy Disabled=系统代理未启用
 Failed to update PAC file =更新 PAC 文件失败
@@ -132,7 +132,7 @@ Failed to decode QRCode=无法解析二维码
 Failed to update registry=无法修改注册表
 System Proxy On: =系统代理已启用：
 Running: Port {0}=正在运行：端口 {0}
-Unexpected error, shadowsocks will exit. Please report to=非预期错误，Shadowsocks将退出。请提交此错误到
+Unexpected error, shadowsocks will exit. Please report to=非预期错误，VPN将退出。请提交此错误到
 Unsupported operating system, use Windows Vista at least.=不支持的操作系统版本，最低需求为Windows Vista。
 Unsupported .NET Framework, please update to 4.6.2 or later.=当前 .NET Framework 版本过低，请升级至4.6.2或更新版本。
 Proxy request failed=代理请求失败
@@ -140,3 +140,6 @@ Proxy handshake failed=代理握手失败
 Register hotkey failed=注册热键失败
 Cannot parse hotkey: {0}=解析热键失败: {0}
 Timeout is invalid, it should not exceed {0}=超时无效，不应超过 {0}
+
+
+login error = 登录失败，请检查用户名和密码

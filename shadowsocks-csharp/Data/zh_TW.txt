@@ -1,6 +1,6 @@
 # translation for Traditional Chinese
 
-Shadowsocks=Shadowsocks
+Shadowsocks=游学VPN
 
 # Menu items
 

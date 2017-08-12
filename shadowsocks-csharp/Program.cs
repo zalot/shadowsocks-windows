@@ -17,6 +17,8 @@ namespace Shadowsocks
         public static ShadowsocksController MainController { get; private set; }
         public static MenuViewController MenuController { get; private set; }
 
+        public static LoginController LoginController { get; private set; }
+
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
@@ -38,37 +40,40 @@ namespace Shadowsocks
                 "Shadowsocks Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Process.Start(
-                    "http://dotnetsocial.cloudapp.net/GetDotnet?tfm=.NETFramework,Version=v4.6.2");
+                    "https://www.microsoft.com/zh-CN/download/details.aspx?id=53344");
                 return;
             }
 
             Utils.ReleaseMemory(true);
-            using (Mutex mutex = new Mutex(false, $"Global\\Shadowsocks_{Application.StartupPath.GetHashCode()}"))
+            using (Mutex mutex = new Mutex(false, $"Global\\Youxuevpn_{Application.StartupPath.GetHashCode()}"))
             {
+                /*
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
                 // handle UI exceptions
                 Application.ThreadException += Application_ThreadException;
                 // handle non-UI exceptions
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                */
                 Application.ApplicationExit += Application_ApplicationExit;
                 SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-
+                
                 if (!mutex.WaitOne(0, false))
                 {
-                    Process[] oldProcesses = Process.GetProcessesByName("Shadowsocks");
+                    Process[] oldProcesses = Process.GetProcessesByName("YouXueVpn");
                     if (oldProcesses.Length > 0)
                     {
                         Process oldProcess = oldProcesses[0];
                     }
-                    MessageBox.Show(I18N.GetString("Find Shadowsocks icon in your notify tray.")
+                    MessageBox.Show(I18N.GetString("Find Youxuevpn icon in your notify tray.")
                         + Environment.NewLine
-                        + I18N.GetString("If you want to start multiple Shadowsocks, make a copy in another directory."),
-                        I18N.GetString("Shadowsocks is already running."));
+                        + I18N.GetString("If you want to start multiple Youxuevpn, make a copy in another directory."),
+                        I18N.GetString("Youxuevpn is already running."));
                     return;
                 }
-                Directory.SetCurrentDirectory(Application.StartupPath);
+
+                Directory.SetCurrentDirectory(Utils.getAppPath());
 #if DEBUG
                 Logging.OpenLogFile();
 
@@ -79,10 +84,8 @@ namespace Shadowsocks
 #else
                 Logging.OpenLogFile();
 #endif
-                MainController = new ShadowsocksController();
-                MenuController = new MenuViewController(MainController);
-                HotKeys.Init(MainController);
-                MainController.Start();
+                LoginController = new LoginController();
+                LoginController.Start();
                 Application.Run();
             }
         }
@@ -96,7 +99,7 @@ namespace Shadowsocks
                 Logging.Error(errMsg);
                 MessageBox.Show(
                     $"{I18N.GetString("Unexpected error, shadowsocks will exit. Please report to")} https://github.com/shadowsocks/shadowsocks-windows/issues {Environment.NewLine}{errMsg}",
-                    "Shadowsocks non-UI Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Youxuevpn non-UI Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }
@@ -108,8 +111,8 @@ namespace Shadowsocks
                 string errorMsg = $"Exception Detail: {Environment.NewLine}{e.Exception}";
                 Logging.Error(errorMsg);
                 MessageBox.Show(
-                    $"{I18N.GetString("Unexpected error, shadowsocks will exit. Please report to")} https://github.com/shadowsocks/shadowsocks-windows/issues {Environment.NewLine}{errorMsg}",
-                    "Shadowsocks UI Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    $"{I18N.GetString("Unexpected error, Youxuevpn will exit. Please report to")} https://github.com/shadowsocks/shadowsocks-windows/issues {Environment.NewLine}{errorMsg}",
+                    "Youxuevpn UI Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
         }

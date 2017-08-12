@@ -18,11 +18,13 @@ namespace Shadowsocks.Model
         public const int MaxServerTimeoutSec = 20;
 
         public string server;
+        public string name = "";
         public int server_port;
         public string password;
         public string method;
         public string remarks;
         public int timeout;
+        public bool enable;
 
         public override int GetHashCode()
         {
@@ -37,27 +39,32 @@ namespace Shadowsocks.Model
 
         public string FriendlyName()
         {
-            if (server.IsNullOrEmpty())
-            {
-                return I18N.GetString("New server");
-            }
-            string serverStr;
-            // CheckHostName() won't do a real DNS lookup
-            var hostType = Uri.CheckHostName(server);
+            //if (server.IsNullOrEmpty())
+            //{
+            //    return I18N.GetString("New server");
+            //}
+            //string serverStr;
+            //// CheckHostName() won't do a real DNS lookup
+            //var hostType = Uri.CheckHostName(server);
 
-            switch (hostType)
+            //switch (hostType)
+            //{
+            //    case UriHostNameType.IPv6:
+            //        serverStr = $"[{server}]:{server_port}";
+            //        break;
+            //    default:
+            //        // IPv4 and domain name
+            //        serverStr = $"{server}:{server_port}";
+            //        break;
+            //}
+            //return remarks.IsNullOrEmpty()
+            //    ? serverStr
+            //    : $"{remarks} ({serverStr})";
+            if(name == null || name == "")
             {
-                case UriHostNameType.IPv6:
-                    serverStr = $"[{server}]:{server_port}";
-                    break;
-                default:
-                    // IPv4 and domain name
-                    serverStr = $"{server}:{server_port}";
-                    break;
+                name = server + ":" + server_port;
             }
-            return remarks.IsNullOrEmpty()
-                ? serverStr
-                : $"{remarks} ({serverStr})";
+            return name;
         }
 
         public Server()

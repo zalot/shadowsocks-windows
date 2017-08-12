@@ -25,7 +25,7 @@ namespace Shadowsocks.Controller.Strategy
         public StatisticsStrategy(ShadowsocksController controller)
         {
             _controller = controller;
-            var servers = controller.GetCurrentConfiguration().configs;
+            var servers = controller.GetCurrentConfiguration().servers;
             var randomIndex = new Random().Next() % servers.Count;
             _currentServer = servers[randomIndex];  //choose a server randomly at first
             _timer = new Timer(ReloadStatisticsAndChooseAServer);
@@ -34,7 +34,7 @@ namespace Shadowsocks.Controller.Strategy
         private void ReloadStatisticsAndChooseAServer(object obj)
         {
             Logging.Debug("Reloading statistics and choose a new server....");
-            var servers = _controller.GetCurrentConfiguration().configs;
+            var servers = _controller.GetCurrentConfiguration().servers;
             LoadStatistics();
             ChooseNewServer(servers);
         }
@@ -131,14 +131,14 @@ namespace Shadowsocks.Controller.Strategy
         {
             if (_currentServer == null)
             {
-                ChooseNewServer(_controller.GetCurrentConfiguration().configs);
+                ChooseNewServer(_controller.GetCurrentConfiguration().servers);
             }
             return _currentServer;  //current server cached for CachedInterval
         }
 
         public void ReloadServers()
         {
-            ChooseNewServer(_controller.GetCurrentConfiguration().configs);
+            ChooseNewServer(_controller.GetCurrentConfiguration().servers);
             _timer?.Change(0, ChoiceKeptMilliseconds);
         }
 

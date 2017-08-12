@@ -55,7 +55,7 @@ namespace Shadowsocks.Controller.Strategy
             // make a copy to avoid locking
             var newServerStatus = new Dictionary<Server, ServerStatus>(_serverStatus);
 
-            foreach (var server in _controller.GetCurrentConfiguration().configs)
+            foreach (var server in _controller.GetCurrentConfiguration().servers)
             {
                 if (!newServerStatus.ContainsKey(server))
                 {
